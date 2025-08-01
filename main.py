@@ -20,7 +20,7 @@ st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 # --- Custom Font, Styling, and Watermark Removal ---
 st.markdown("""
 	<style>
-	@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+	@import url();
 
 	html, body, [class^="css"] *, .stApp, .stMarkdown, .stTextInput input {
 		font-family: 'Inter', sans-serif !important;
