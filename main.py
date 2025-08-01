@@ -19,29 +19,39 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # --- Streamlit App Layout ---
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# Inject custom CSS to style the input box with a soft grey border
+# Inject CSS to remove red outline and apply grey styling
 st.markdown("""
 	<style>
-	/* Custom grey border for input container */
-	div[data-baseweb="input"] > div {
+	/* Core styling for input box */
+	input[type="text"] {
 		border: 2px solid #999999 !important;
 		border-radius: 12px !important;
-		padding: 8px;
-		box-shadow: none !important;
+		padding: 8px !important;
 		outline: none !important;
+		box-shadow: none !important;
+		background-color: #f9f9f9 !important;
+		color: #333333 !important;
 	}
 
-	/* On focus (when typing in the box) */
-	div[data-baseweb="input"] > div:focus-within {
-		border-color: #666666 !important;
-		box-shadow: none !important;
+	/* On focus (when typing) */
+	input[type="text"]:focus {
+		border: 2px solid #666666 !important;
 		outline: none !important;
+		box-shadow: none !important;
 	}
 
-	/* Remove default input focus outline */
-	input:focus {
+	/* Remove red validation borders */
+	input:invalid,
+	input[aria-invalid="true"] {
+		border: 2px solid #999999 !important;
 		outline: none !important;
 		box-shadow: none !important;
+	}
+
+	/* Suppress container-level styling just in case */
+	div[data-baseweb="input"] {
+		box-shadow: none !important;
+		outline: none !important;
 	}
 	</style>
 """, unsafe_allow_html=True)
