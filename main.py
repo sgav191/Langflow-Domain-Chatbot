@@ -19,8 +19,8 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # --- Streamlit App Layout ---
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-st.title("📘 Domain Chatbot")
-st.markdown("Ask me anything about the novel *Domain* by Rohan Gavin!")
+st.title("<<domAIn chatbot>>")
+st.markdown("Ask the domAIn Chatbot anything about the book")
 
 # Chat input
 user_input = st.text_input("You:", placeholder="Ask a question...")
