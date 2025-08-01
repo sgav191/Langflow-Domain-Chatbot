@@ -55,7 +55,6 @@ st.markdown("""
 
 # Centered title and description
 st.markdown("<h1 style='text-align: center;'>&lt;&lt;Chat with domAIn&gt;&gt;</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>&lt;&lt; Ask me anything &gt;&gt;</p>", unsafe_allow_html=True)
 
 # Initialize message history
 if "messages" not in st.session_state:
