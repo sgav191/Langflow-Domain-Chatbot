@@ -54,6 +54,10 @@ st.markdown("Ask the domAIn Chatbot anything about the book")
 if "messages" not in st.session_state:
 	st.session_state.messages = []
 
+# Initialize send flag
+if "just_sent" not in st.session_state:
+	st.session_state.just_sent = False
+
 # Show chat history
 for msg in st.session_state.messages:
 	sender = "You" if msg["role"] == "user" else "Chatbot"
@@ -62,9 +66,10 @@ for msg in st.session_state.messages:
 # Input box with persistent state
 user_input = st.text_input("You:", placeholder="Ask a question...", key="user_input")
 
-# Process input only if non-empty
-if user_input.strip():
+# Only process if there's input and it's not already handled
+if user_input and st.session_state.get("just_sent") is not True:
 	st.session_state.messages.append({"role": "user", "content": user_input})
+	st.session_state.just_sent = True
 
 	# Prepare and send API request
 	with st.spinner("Thinking..."):
@@ -85,12 +90,16 @@ if user_input.strip():
 			bot_reply = data["outputs"][0]["outputs"][0]["results"]["message"]["text"]
 
 			st.session_state.messages.append({"role": "bot", "content": bot_reply})
+
 		except Exception as e:
 			st.session_state.messages.append({"role": "bot", "content": f"Error: {e}"})
 
-	# Clear the input and rerun
 	st.session_state.user_input = ""
 	st.rerun()
+
+# Reset flag
+if st.session_state.get("just_sent"):
+	st.session_state.just_sent = False
 
 # Optional: Clear history button
 if st.button("Clear chat"):
