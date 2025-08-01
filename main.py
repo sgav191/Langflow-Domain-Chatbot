@@ -14,104 +14,61 @@ if not api_key:
 # Langflow API endpoint
 url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-4386-bc35-2e79ac3f46c7"
 
-# Streamlit setup
+# Streamlit config
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# --- Styling and Watermark/Bar Removal ---
+# Inject custom CSS for layout tweaks & watermark removal
 st.markdown("""
     <style>
-    html, body, [class^="css"] *, .stApp, .stMarkdown, .stTextInput input {
-        font-family: sans-serif !important;
-    }
-
-    div[data-baseweb="input"] {
-        border: 2px solid #999999 !important;
-        border-radius: 12px !important;
-        padding: 0.5rem !important;
-        background-color: #f9f9f9 !important;
-    }
-    div[data-baseweb="input"] > div {
-        background-color: transparent !important;
-        border: none !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-    }
-    input {
-        background-color: transparent !important;
-        color: #333333 !important;
-        font-size: 16px !important;
-        outline: none !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-    div[data-baseweb="input"]:focus-within {
-        border: 2px solid #666666 !important;  /* grey border instead of red */
-    }
-
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header[data-testid="stHeader"] {background: none;}
+    #MainMenu, footer, header {visibility: hidden;}
+    .block-container { padding-top: 2rem; }
+    .stChatMessage { margin-bottom: 1.5rem; }
+    .st-emotion-cache-1y4p8pa { justify-content: center; }
     </style>
 """, unsafe_allow_html=True)
 
-# Title and description
-st.title("<<domAIn chatbot>>")
-st.markdown("Ask the domAIn Chatbot anything about the book")
+# Centered title and description
+st.markdown("<h1 style='text-align: center;'>&lt;&lt;domAIn chatbot&gt;&gt;</h1>", unsafe_allow_html=True)
 
-# Initialize chat history
+# Initialize message history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Initialize control flags
-if "just_sent" not in st.session_state:
-    st.session_state.just_sent = False
-if "clear_input" not in st.session_state:
-    st.session_state.clear_input = False
-
-# Handle input clearing
-if st.session_state.clear_input:
-    st.session_state.clear_input = False
-    st.session_state.pop("user_input", None)
-    st.rerun()
-
-# Show chat history
+# Display conversation
 for msg in st.session_state.messages:
-    sender = "You" if msg["role"] == "user" else "Chatbot"
-    st.markdown(f"**{sender}:** {msg['content']}")
+    if msg["role"] == "user":
+        with st.chat_message("user", avatar="human avatar.jpg"):
+            st.markdown(msg["content"])
+    else:
+        with st.chat_message("assistant", avatar="AI avatar.jpg"):
+            st.markdown(msg["content"])
 
-# Input field
-user_input = st.text_input("You:", placeholder="Ask a question...", key="user_input")
+# Text input
+if prompt := st.chat_input("Ask a question..."):
+    st.session_state.messages.append({"role": "user", "content": prompt})
 
-# Handle user input
-if user_input and not st.session_state.just_sent:
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    st.session_state.just_sent = True
+    with st.chat_message("user", avatar="human avatar.jpg"):
+        st.markdown(prompt)
 
-    # Call Langflow API
-    with st.spinner("Thinking..."):
-        payload = {
-            "output_type": "chat",
-            "input_type": "chat",
-            "input_value": user_input
-        }
-        headers = {
-            "Content-Type": "application/json",
-            "x-api-key": api_key
-        }
+    with st.chat_message("assistant", avatar="AI avatar.jpg"):
+        with st.spinner("Thinking..."):
+            try:
+                payload = {
+                    "output_type": "chat",
+                    "input_type": "chat",
+                    "input_value": prompt
+                }
+                headers = {
+                    "Content-Type": "application/json",
+                    "x-api-key": api_key
+                }
+                response = requests.post(url, json=payload, headers=headers)
+                response.raise_for_status()
+                data = response.json()
+                message = data["outputs"][0]["outputs"][0]["results"]["message"]["text"]
+            except Exception as e:
+                message = f"Error: {e}"
 
-        try:
-            response = requests.post(url, json=payload, headers=headers)
-            response.raise_for_status()
-            data = response.json()
-            bot_reply = data["outputs"][0]["outputs"][0]["results"]["message"]["text"]
-            st.session_state.messages.append({"role": "bot", "content": bot_reply})
-        except Exception as e:
-            st.session_state.messages.append({"role": "bot", "content": f"Error: {e}"})
+            st.markdown(message)
+            st.session_state.messages.append({"role": "assistant", "content": message})
 
-    # Prepare input clear for next run
-    st.session_state.clear_input = True
-    st.rerun()
-
-# Reset send flag
-if st.session_state.just_sent:
-    st.session_state.just_sent = False
