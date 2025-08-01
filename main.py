@@ -17,13 +17,12 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # Streamlit setup
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# --- Custom Font, Styling, and Watermark Removal ---
+# --- Styling and Watermark Removal ---
 st.markdown("""
 	<style>
-	@import url();
-
 	html, body, [class^="css"] *, .stApp, .stMarkdown, .stTextInput input {
-		font-family: 'Inter', sans-serif !important;
+		/* Default system font stack */
+		font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 	}
 
 	div[data-baseweb="input"] {
