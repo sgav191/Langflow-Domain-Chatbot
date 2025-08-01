@@ -17,14 +17,9 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # Streamlit setup
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# --- Styling and Watermark Removal ---
+# --- Basic Styling and Watermark Removal ---
 st.markdown("""
 	<style>
-	html, body, [class^="css"] *, .stApp, .stMarkdown, .stTextInput input {
-		/* Default system font stack */
-		font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-	}
-
 	div[data-baseweb="input"] {
 		border: 2px solid #999999 !important;
 		border-radius: 12px !important;
