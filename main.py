@@ -16,20 +16,21 @@ if not api_key:
 # Langflow API endpoint
 url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-4386-bc35-2e79ac3f46c7"
 
-# --- Streamlit App Layout ---
+# Page settings
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# Inject hardcore CSS + JS to override red border styling
+# Inject custom CSS to style the input box with no red outlines
 st.markdown("""
 	<style>
 	input[type="text"] {
 		border: 2px solid #999999 !important;
 		border-radius: 12px !important;
-		padding: 8px !important;
+		padding: 10px !important;
 		outline: none !important;
 		box-shadow: none !important;
 		background-color: #f9f9f9 !important;
 		color: #333333 !important;
+		font-size: 16px !important;
 	}
 
 	input[type="text"]:focus {
@@ -45,36 +46,26 @@ st.markdown("""
 		outline: none !important;
 	}
 	</style>
-
-	<script>
-	const fixTextbox = () => {
-		const input = window.parent.document.querySelector('input[type="text"]');
-		if (input) {
-			input.style.border = "2px solid #999999";
-			input.style.borderRadius = "12px";
-			input.style.outline = "none";
-			input.style.boxShadow = "none";
-			input.style.backgroundColor = "#f9f9f9";
-			input.style.color = "#333333";
-		}
-	};
-	window.addEventListener("load", fixTextbox);
-	</script>
 """, unsafe_allow_html=True)
 
-# --- UI ---
+# UI: Title and subtitle
 st.title("<<domAIn chatbot>>")
 st.markdown("Ask the domAIn Chatbot anything about the book")
 
-# User input field
-user_input = st.text_input("You:", placeholder="Ask a question...")
+# ✅ CUSTOM INPUT (label hidden to suppress accessibility outlines)
+user_input = st.text_input(
+	label="",
+	placeholder="Ask a question...",
+	label_visibility="collapsed"
+)
 
-# Submit button
+# Send button
 if st.button("Send"):
 	if not user_input.strip():
 		st.warning("Please enter a message.")
 	else:
 		with st.spinner("Thinking..."):
+			# Build request payload
 			payload = {
 				"output_type": "chat",
 				"input_type": "chat",
@@ -88,8 +79,12 @@ if st.button("Send"):
 			try:
 				response = requests.post(url, json=payload, headers=headers)
 				response.raise_for_status()
+
+				# Parse response
 				data = response.json()
 				message = data["outputs"][0]["outputs"][0]["results"]["message"]["text"]
+
+				# Display chatbot reply
 				st.markdown(f"**Chatbot says:** {message}")
 
 			except Exception as e:
