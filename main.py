@@ -1,4 +1,4 @@
-import streamlit as st
+\import streamlit as st
 import requests
 import os
 from dotenv import load_dotenv
@@ -17,23 +17,25 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # Streamlit config
 st.set_page_config(page_title="<< Chat with domAIn >>", layout="centered")
 
-# Inject CSS to hide top bar and watermark
+# Inject CSS to remove top bar, watermark, and center layout
 st.markdown("""
     <style>
-    /* Hide Streamlit chrome */
+    /* Hide Streamlit top bar */
     header[data-testid="stHeader"] {
         visibility: hidden !important;
         height: 0px !important;
         position: absolute !important;
         top: -100px;
     }
+
+    /* Hide all watermark/branding decorations */
     #MainMenu, footer, [data-testid="stDecoration"], .viewerBadge_container__1QSob {
         visibility: hidden !important;
         display: none !important;
         height: 0px !important;
     }
 
-    /* Layout tweaks */
+    /* Layout refinements */
     .block-container {
         padding-top: 2rem;
     }
@@ -43,7 +45,6 @@ st.markdown("""
     .st-emotion-cache-1y4p8pa {
         justify-content: center;
     }
-
     html, body {
         margin-top: 0 !important;
         padding-top: 0 !important;
@@ -69,7 +70,7 @@ for msg in st.session_state.messages:
         with st.chat_message("assistant", avatar="AI avatar.jpg"):
             st.markdown(msg["content"])
 
-# Handle new input
+# Handle user prompt
 if prompt := st.chat_input("Ask a question..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
