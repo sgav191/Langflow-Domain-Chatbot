@@ -19,17 +19,29 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # --- Streamlit App Layout ---
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# Inject custom CSS for grey border styling
+# Inject custom CSS to style the input box with a soft grey border
 st.markdown("""
 	<style>
+	/* Custom grey border for input container */
 	div[data-baseweb="input"] > div {
-		border: 2px solid #999999 !important;  /* soft grey border */
-		border-radius: 12px;
+		border: 2px solid #999999 !important;
+		border-radius: 12px !important;
 		padding: 8px;
+		box-shadow: none !important;
+		outline: none !important;
 	}
 
+	/* On focus (when typing in the box) */
 	div[data-baseweb="input"] > div:focus-within {
-		border-color: #666666 !important; /* darker grey on focus */
+		border-color: #666666 !important;
+		box-shadow: none !important;
+		outline: none !important;
+	}
+
+	/* Remove default input focus outline */
+	input:focus {
+		outline: none !important;
+		box-shadow: none !important;
 	}
 	</style>
 """, unsafe_allow_html=True)
