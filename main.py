@@ -14,7 +14,7 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# CSS: grey input styling + watermark removal
+# CSS: grey input styling + watermark removal + center title
 st.markdown("""
 	<style>
 	div[data-baseweb="input"] { border: 2px solid #999999 !important; border-radius: 12px !important; padding: 0.5rem !important; background-color: #f9f9f9 !important; }
@@ -22,6 +22,7 @@ st.markdown("""
 	input { background-color: transparent !important; color: #333 !important; font-size:16px !important; outline: none !important; border: none !important; box-shadow: none !important; }
 	div[data-baseweb="input"]:focus-within { border: 2px solid #666 !important; }
 	#MainMenu, footer, header {visibility:hidden;}
+	h1, .stMarkdown h1, .stMarkdown p { text-align: center; }
 	</style>
 """, unsafe_allow_html=True)
 
