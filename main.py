@@ -17,9 +17,15 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # Streamlit setup
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# --- CSS Styling ---
+# --- Custom Font & CSS Styling ---
 st.markdown("""
 	<style>
+	@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+	html, body, [class*="css"]  {
+		font-family: 'Inter', sans-serif;
+	}
+
 	div[data-baseweb="input"] {
 		border: 2px solid #999999 !important;
 		border-radius: 12px !important;
