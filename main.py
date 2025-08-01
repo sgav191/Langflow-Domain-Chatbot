@@ -54,24 +54,32 @@ st.markdown("Ask the domAIn Chatbot anything about the book")
 if "messages" not in st.session_state:
 	st.session_state.messages = []
 
-# Initialize send flag
+# Initialize control flags
 if "just_sent" not in st.session_state:
 	st.session_state.just_sent = False
+if "clear_input" not in st.session_state:
+	st.session_state.clear_input = False
+
+# Handle input clearing
+if st.session_state.clear_input:
+	st.session_state.clear_input = False
+	st.session_state.pop("user_input", None)
+	st.rerun()
 
 # Show chat history
 for msg in st.session_state.messages:
 	sender = "You" if msg["role"] == "user" else "Chatbot"
 	st.markdown(f"**{sender}:** {msg['content']}")
 
-# Input box with persistent state
+# Input field
 user_input = st.text_input("You:", placeholder="Ask a question...", key="user_input")
 
-# Only process if there's input and it's not already handled
-if user_input and st.session_state.get("just_sent") is not True:
+# Handle user input
+if user_input and not st.session_state.just_sent:
 	st.session_state.messages.append({"role": "user", "content": user_input})
 	st.session_state.just_sent = True
 
-	# Prepare and send API request
+	# Call Langflow API
 	with st.spinner("Thinking..."):
 		payload = {
 			"output_type": "chat",
@@ -88,21 +96,20 @@ if user_input and st.session_state.get("just_sent") is not True:
 			response.raise_for_status()
 			data = response.json()
 			bot_reply = data["outputs"][0]["outputs"][0]["results"]["message"]["text"]
-
 			st.session_state.messages.append({"role": "bot", "content": bot_reply})
-
 		except Exception as e:
 			st.session_state.messages.append({"role": "bot", "content": f"Error: {e}"})
 
-	st.session_state.user_input = ""
+	# Prepare input clear for next run
+	st.session_state.clear_input = True
 	st.rerun()
 
-# Reset flag
-if st.session_state.get("just_sent"):
+# Reset send flag
+if st.session_state.just_sent:
 	st.session_state.just_sent = False
 
-# Optional: Clear history button
+# Optional: clear history
 if st.button("Clear chat"):
 	st.session_state.messages = []
-	st.session_state.user_input = ""
+	st.session_state.clear_input = True
 	st.rerun()
