@@ -61,7 +61,3 @@ if prompt:
 				reply = f"Error: {e}"
 			st.markdown(reply)
 	st.session_state.messages.append({"role": "assistant", "content": reply})
-
-# Optional clear button
-if st.button("Clear chat"):
-	st.session_state.messages = []
