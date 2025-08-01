@@ -17,7 +17,7 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # Streamlit config
 st.set_page_config(page_title="<< Chat with domAIn >>", layout="centered")
 
-# Inject CSS and JS to hide watermarks and style layout
+# Inject CSS and JavaScript to remove watermark, UI chrome, and center content
 st.markdown("""
     <style>
     header[data-testid="stHeader"] {
@@ -28,7 +28,8 @@ st.markdown("""
         display: none !important;
     }
     .viewerBadge_container__1QSob,
-    .viewerBadge_link__qRIco {
+    .viewerBadge_link__qRIco,
+    [data-testid="stDecoration"] {
         display: none !important;
         visibility: hidden !important;
         height: 0px !important;
@@ -48,14 +49,22 @@ st.markdown("""
     </style>
 
     <script>
-    setTimeout(function() {
-        const badge = window.parent.document.querySelector('.viewerBadge_container__1QSob');
-        if (badge) { badge.style.display = 'none'; }
-    }, 1000);
+    function hideStreamlitWatermark() {
+        const root = window.parent.document;
+        const badge = root.querySelector('.viewerBadge_container__1QSob');
+        const link = root.querySelector('.viewerBadge_link__qRIco');
+        const deco = root.querySelector('[data-testid="stDecoration"]');
+        if (badge) badge.style.display = 'none';
+        if (link) link.style.display = 'none';
+        if (deco) deco.style.display = 'none';
+    }
+
+    setTimeout(hideStreamlitWatermark, 500);
+    setTimeout(hideStreamlitWatermark, 2000);
     </script>
 """, unsafe_allow_html=True)
 
-# Centered title and description
+# Centered title and subtitle
 st.markdown("<h1 style='text-align: center;'>&lt;&lt;Chat with domAIn&gt;&gt;</h1>", unsafe_allow_html=True)
 st.markdown("<< Ask me anything >>")
 
@@ -63,7 +72,7 @@ st.markdown("<< Ask me anything >>")
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display past messages
+# Display chat messages
 for msg in st.session_state.messages:
     if msg["role"] == "user":
         with st.chat_message("user", avatar="human avatar.jpg"):
@@ -72,7 +81,7 @@ for msg in st.session_state.messages:
         with st.chat_message("assistant", avatar="AI avatar.jpg"):
             st.markdown(msg["content"])
 
-# Handle user input
+# Handle new user input
 if prompt := st.chat_input("Ask a question..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
