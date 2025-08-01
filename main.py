@@ -17,24 +17,42 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # Streamlit config
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# Inject custom CSS for layout tweaks & watermark removal
+# Inject custom CSS to hide Streamlit chrome and style layout
 st.markdown("""
     <style>
-    #MainMenu, footer, header {visibility: hidden;}
-    .block-container { padding-top: 2rem; }
-    .stChatMessage { margin-bottom: 1.5rem; }
-    .st-emotion-cache-1y4p8pa { justify-content: center; }
+    header[data-testid="stHeader"] {
+        background: none !important;
+    }
+    #MainMenu, footer {
+        visibility: hidden !important;
+    }
+    .viewerBadge_container__1QSob {
+        display: none !important;
+    }
+    .block-container {
+        padding-top: 2rem;
+    }
+    .stChatMessage {
+        margin-bottom: 1.5rem;
+    }
+    .st-emotion-cache-1y4p8pa {
+        justify-content: center;
+    }
+    h1, h2, h3, .stMarkdown {
+        text-align: center;
+    }
     </style>
 """, unsafe_allow_html=True)
 
 # Centered title and description
 st.markdown("<h1 style='text-align: center;'>&lt;&lt;Chat with domAIn&gt;&gt;</h1>", unsafe_allow_html=True)
+st.markdown("<< Ask me anything >>")
 
-# Initialize message history
+# Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display conversation
+# Display conversation history
 for msg in st.session_state.messages:
     if msg["role"] == "user":
         with st.chat_message("user", avatar="human avatar.jpg"):
@@ -43,7 +61,7 @@ for msg in st.session_state.messages:
         with st.chat_message("assistant", avatar="AI avatar.jpg"):
             st.markdown(msg["content"])
 
-# Text input
+# Chat input
 if prompt := st.chat_input("Ask a question..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
