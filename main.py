@@ -17,17 +17,13 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # Streamlit config
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# Inject custom CSS to hide top bar and style layout
+# Inject custom CSS for layout tweaks & watermark removal
 st.markdown("""
     <style>
-    header[data-testid="stHeader"] {
-        background: none;
-    }
-    #MainMenu, footer {visibility: hidden;}
+    #MainMenu, footer, header {visibility: hidden;}
     .block-container { padding-top: 2rem; }
     .stChatMessage { margin-bottom: 1.5rem; }
     .st-emotion-cache-1y4p8pa { justify-content: center; }
-    h1, h2, h3, .stMarkdown { text-align: center; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -75,3 +71,4 @@ if prompt := st.chat_input("Ask a question..."):
 
             st.markdown(message)
             st.session_state.messages.append({"role": "assistant", "content": message})
+
