@@ -17,7 +17,7 @@ if not api_key:
 url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-4386-bc35-2e79ac3f46c7"
 
 # --- Streamlit App Layout ---
-st.set_page_config(page_title="Domain Chatbot", page_icon="📚", layout="centered")
+st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
 st.title("📘 Domain Chatbot")
 st.markdown("Ask me anything about the novel *Domain* by Rohan Gavin!")
