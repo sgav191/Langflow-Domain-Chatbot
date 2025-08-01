@@ -22,8 +22,8 @@ st.markdown("""
 	<style>
 	@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
-	html, body, [class*="css"]  {
-		font-family: 'Inter', sans-serif;
+	html, body, [class^="css"] *, .stApp, .stMarkdown, .stTextInput input {
+		font-family: 'Inter', sans-serif !important;
 	}
 
 	div[data-baseweb="input"] {
