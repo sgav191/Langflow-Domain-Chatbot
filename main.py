@@ -15,9 +15,9 @@ if not api_key:
 url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-4386-bc35-2e79ac3f46c7"
 
 # Streamlit config
-st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
+st.set_page_config(page_title="<< Chat with domAIn >>", layout="centered")
 
-# Inject custom CSS to hide Streamlit chrome and style layout
+# Inject CSS and JS to hide watermarks and style layout
 st.markdown("""
     <style>
     header[data-testid="stHeader"] {
@@ -25,9 +25,13 @@ st.markdown("""
     }
     #MainMenu, footer {
         visibility: hidden !important;
-    }
-    .viewerBadge_container__1QSob {
         display: none !important;
+    }
+    .viewerBadge_container__1QSob,
+    .viewerBadge_link__qRIco {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0px !important;
     }
     .block-container {
         padding-top: 2rem;
@@ -42,6 +46,13 @@ st.markdown("""
         text-align: center;
     }
     </style>
+
+    <script>
+    setTimeout(function() {
+        const badge = window.parent.document.querySelector('.viewerBadge_container__1QSob');
+        if (badge) { badge.style.display = 'none'; }
+    }, 1000);
+    </script>
 """, unsafe_allow_html=True)
 
 # Centered title and description
@@ -52,7 +63,7 @@ st.markdown("<< Ask me anything >>")
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display conversation history
+# Display past messages
 for msg in st.session_state.messages:
     if msg["role"] == "user":
         with st.chat_message("user", avatar="human avatar.jpg"):
@@ -61,7 +72,7 @@ for msg in st.session_state.messages:
         with st.chat_message("assistant", avatar="AI avatar.jpg"):
             st.markdown(msg["content"])
 
-# Chat input
+# Handle user input
 if prompt := st.chat_input("Ask a question..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
