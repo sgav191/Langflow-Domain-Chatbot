@@ -15,64 +15,27 @@ if not api_key:
 url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-4386-bc35-2e79ac3f46c7"
 
 # Streamlit config
-st.set_page_config(page_title="<< Chat with domAIn >>", layout="centered")
+st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# Inject CSS and JavaScript to remove watermark, UI chrome, and center content
+# Inject custom CSS for layout tweaks & hide colored top bar
 st.markdown("""
     <style>
-    header[data-testid="stHeader"] {
-        background: none !important;
-    }
-    #MainMenu, footer {
-        visibility: hidden !important;
-        display: none !important;
-    }
-    .viewerBadge_container__1QSob,
-    .viewerBadge_link__qRIco,
-    [data-testid="stDecoration"] {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0px !important;
-    }
-    .block-container {
-        padding-top: 2rem;
-    }
-    .stChatMessage {
-        margin-bottom: 1.5rem;
-    }
-    .st-emotion-cache-1y4p8pa {
-        justify-content: center;
-    }
-    h1, h2, h3, .stMarkdown {
-        text-align: center;
-    }
+    #MainMenu, footer, header {visibility: hidden;}
+    header[data-testid="stHeader"] { background: none; }  /* removes colored bar */
+    .block-container { padding-top: 2rem; }
+    .stChatMessage { margin-bottom: 1.5rem; }
+    .st-emotion-cache-1y4p8pa { justify-content: center; }
     </style>
-
-    <script>
-    function hideStreamlitWatermark() {
-        const root = window.parent.document;
-        const badge = root.querySelector('.viewerBadge_container__1QSob');
-        const link = root.querySelector('.viewerBadge_link__qRIco');
-        const deco = root.querySelector('[data-testid="stDecoration"]');
-        if (badge) badge.style.display = 'none';
-        if (link) link.style.display = 'none';
-        if (deco) deco.style.display = 'none';
-    }
-
-    setTimeout(hideStreamlitWatermark, 500);
-    setTimeout(hideStreamlitWatermark, 2000);
-    </script>
 """, unsafe_allow_html=True)
 
-# Centered title and subtitle
+# Centered title and description
 st.markdown("<h1 style='text-align: center;'>&lt;&lt;Chat with domAIn&gt;&gt;</h1>", unsafe_allow_html=True)
-st.markdown("<< Ask me anything >>")
 
-# Initialize chat history
+# Initialize message history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat messages
+# Display conversation
 for msg in st.session_state.messages:
     if msg["role"] == "user":
         with st.chat_message("user", avatar="human avatar.jpg"):
@@ -81,7 +44,7 @@ for msg in st.session_state.messages:
         with st.chat_message("assistant", avatar="AI avatar.jpg"):
             st.markdown(msg["content"])
 
-# Handle new user input
+# Text input
 if prompt := st.chat_input("Ask a question..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
