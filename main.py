@@ -17,11 +17,11 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # Streamlit config
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# Inject custom CSS for layout tweaks & hide colored top bar
+# Inject custom CSS to hide top bar and center layout
 st.markdown("""
     <style>
     #MainMenu, footer, header {visibility: hidden;}
-    header[data-testid="stHeader"] { background: none; }  /* removes colored bar */
+    header[data-testid="stHeader"] { visibility: hidden; }  /* fully hides colored top bar */
     .block-container { padding-top: 2rem; }
     .stChatMessage { margin-bottom: 1.5rem; }
     .st-emotion-cache-1y4p8pa { justify-content: center; }
