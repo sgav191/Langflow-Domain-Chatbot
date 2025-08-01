@@ -33,15 +33,20 @@ if "messages" not in st.session_state:
 
 # Display chat history using Streamlit's chat components
 for msg in st.session_state.messages:
-	with st.chat_message(msg["role"]):
+	avatar = "🧑" if msg["role"] == "user" else "🤖"
+	with st.chat_message(msg["role"], avatar=avatar):
 		st.markdown(msg["content"])
 
 # Input widget from Streamlit tutorial
 prompt = st.chat_input("Enter your question...")
 
 if prompt:
+	# Show user message immediately
+	with st.chat_message("user", avatar="🧑"):
+		st.markdown(prompt)
 	st.session_state.messages.append({"role": "user", "content": prompt})
-	with st.chat_message("assistant"):
+
+	with st.chat_message("assistant", avatar="🤖"):
 		with st.spinner("Thinking..."):
 			try:
 				resp = requests.post(url, json={
