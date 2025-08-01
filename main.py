@@ -3,7 +3,7 @@ import requests
 import os
 from dotenv import load_dotenv
 
-# Load env vars locally or from Streamlit secrets
+# Load environment variables
 load_dotenv()
 api_key = os.getenv("LANGFLOW_API_KEY", st.secrets.get("LANGFLOW_API_KEY", ""))
 
@@ -46,30 +46,27 @@ st.markdown("""
 	</style>
 """, unsafe_allow_html=True)
 
-# Title & prompt
+# Title and description
 st.title("<<domAIn chatbot>>")
 st.markdown("Ask the domAIn Chatbot anything about the book")
 
-# --- Session state setup ---
+# Initialize chat history
 if "messages" not in st.session_state:
 	st.session_state.messages = []
 
-if "user_input" not in st.session_state:
-	st.session_state.user_input = ""
-
-# Display chat history
+# Show chat history
 for msg in st.session_state.messages:
 	sender = "You" if msg["role"] == "user" else "Chatbot"
 	st.markdown(f"**{sender}:** {msg['content']}")
 
-# Input field with memory
+# Input box with persistent state
 user_input = st.text_input("You:", placeholder="Ask a question...", key="user_input")
 
-# If there's input, send it once and reset
+# Process input only if non-empty
 if user_input.strip():
 	st.session_state.messages.append({"role": "user", "content": user_input})
-	st.session_state.user_input = ""  # clear after sending to prevent loops
 
+	# Prepare and send API request
 	with st.spinner("Thinking..."):
 		payload = {
 			"output_type": "chat",
@@ -86,14 +83,16 @@ if user_input.strip():
 			response.raise_for_status()
 			data = response.json()
 			bot_reply = data["outputs"][0]["outputs"][0]["results"]["message"]["text"]
-			st.session_state.messages.append({"role": "bot", "content": bot_reply})
-			st.rerun()
 
+			st.session_state.messages.append({"role": "bot", "content": bot_reply})
 		except Exception as e:
 			st.session_state.messages.append({"role": "bot", "content": f"Error: {e}"})
-			st.rerun()
 
-# Clear chat button
+	# Clear the input and rerun
+	st.session_state.user_input = ""
+	st.rerun()
+
+# Optional: Clear history button
 if st.button("Clear chat"):
 	st.session_state.messages = []
 	st.session_state.user_input = ""
