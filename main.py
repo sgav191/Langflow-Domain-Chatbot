@@ -15,66 +15,48 @@ if not api_key:
 url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-4386-bc35-2e79ac3f46c7"
 
 # Streamlit config
-st.set_page_config(page_title="<< Chat with domAIn >>", layout="centered")
+st.set_page_config(page_title="<<Chat with domAIn>>", layout="centered")
 
-# Inject CSS to remove top bar, watermark, and center layout
+# Inject custom CSS for layout tweaks, watermark & halo removal
 st.markdown("""
     <style>
-    /* Hide Streamlit top bar */
-    header[data-testid="stHeader"] {
-        visibility: hidden !important;
-        height: 0px !important;
-        position: absolute !important;
-        top: -100px;
-    }
-
-    /* Hide all watermark/branding decorations */
-    #MainMenu, footer, [data-testid="stDecoration"], .viewerBadge_container__1QSob {
-        visibility: hidden !important;
-        display: none !important;
-        height: 0px !important;
-    }
-
-    /* Layout refinements */
-    .block-container {
-        padding-top: 2rem;
-    }
-    .stChatMessage {
-        margin-bottom: 1.5rem;
-    }
-    .st-emotion-cache-1y4p8pa {
-        justify-content: center;
-    }
-    html, body {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-        background-color: white !important;
+    #MainMenu, footer, header {visibility: hidden;}
+    .block-container { padding-top: 2rem; }
+    .stChatMessage { margin-bottom: 1.5rem; }
+    .st-emotion-cache-1y4p8pa { justify-content: center; }
+    .element-container:has(.stChatMessage) > div:last-child {
+        display: none;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Centered title and description
+# Centered title
 st.markdown("<h1 style='text-align: center;'>&lt;&lt;Chat with domAIn&gt;&gt;</h1>", unsafe_allow_html=True)
 
 # Initialize message history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat history
+# Render chat history without double-rendered halo effect
+rendered = set()
 for msg in st.session_state.messages:
+    if msg["content"] in rendered:
+        continue
+    rendered.add(msg["content"])
+
     if msg["role"] == "user":
         with st.chat_message("user", avatar="human avatar.jpg"):
-            st.markdown(msg["content"])
+            st.markdown(f"<div style='all: unset'>{msg['content']}</div>", unsafe_allow_html=True)
     else:
         with st.chat_message("assistant", avatar="AI avatar.jpg"):
-            st.markdown(msg["content"])
+            st.markdown(f"<div style='all: unset'>{msg['content']}</div>", unsafe_allow_html=True)
 
-# Handle user prompt
+# Input and reply handling
 if prompt := st.chat_input("Ask a question..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
     with st.chat_message("user", avatar="human avatar.jpg"):
-        st.markdown(prompt)
+        st.markdown(f"<div style='all: unset'>{prompt}</div>", unsafe_allow_html=True)
 
     with st.chat_message("assistant", avatar="AI avatar.jpg"):
         with st.spinner("Thinking..."):
@@ -95,5 +77,5 @@ if prompt := st.chat_input("Ask a question..."):
             except Exception as e:
                 message = f"Error: {e}"
 
-            st.markdown(message)
+            st.markdown(f"<div style='all: unset'>{message}</div>", unsafe_allow_html=True)
             st.session_state.messages.append({"role": "assistant", "content": message})
