@@ -27,7 +27,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("<<domAIn chatbot>>")
-st.markdown("Ask the domAIn Chatbot anything about the book")
 
 if "messages" not in st.session_state:
 	st.session_state.messages = []
