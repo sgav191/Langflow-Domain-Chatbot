@@ -19,6 +19,21 @@ url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-438
 # --- Streamlit App Layout ---
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
+# Inject custom CSS for grey border styling
+st.markdown("""
+	<style>
+	div[data-baseweb="input"] > div {
+		border: 2px solid #999999 !important;  /* soft grey border */
+		border-radius: 12px;
+		padding: 8px;
+	}
+
+	div[data-baseweb="input"] > div:focus-within {
+		border-color: #666666 !important; /* darker grey on focus */
+	}
+	</style>
+""", unsafe_allow_html=True)
+
 st.title("<<domAIn chatbot>>")
 st.markdown("Ask the domAIn Chatbot anything about the book")
 
