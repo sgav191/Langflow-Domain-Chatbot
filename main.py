@@ -3,22 +3,22 @@ import requests
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
+# Load environment variables (for local dev)
 load_dotenv()
 
 # Get API key from .env or Streamlit secrets
 api_key = os.getenv("LANGFLOW_API_KEY", st.secrets.get("LANGFLOW_API_KEY", ""))
 if not api_key:
-	st.error("❌ LANGFLOW_API_KEY not found.")
+	st.error("❌ LANGFLOW_API_KEY not found. Please set it in .env or Streamlit secrets.")
 	st.stop()
 
-# API endpoint
+# Langflow API endpoint
 url = "https://langflow-ai-3zj2x.ondigitalocean.app/api/v1/run/177d208c-0608-4386-bc35-2e79ac3f46c7"
 
 # Page config
 st.set_page_config(page_title="<<domAIn chatbot>>", layout="centered")
 
-# CSS styling (including the fix!)
+# --- Custom CSS for input box ---
 st.markdown("""
 	<style>
 	div[data-baseweb="input"] {
@@ -27,12 +27,14 @@ st.markdown("""
 		padding: 0.5rem !important;
 		background-color: #f9f9f9 !important;
 	}
+
 	div[data-baseweb="input"] > div {
 		background-color: transparent !important;
 		border: none !important;
 		padding: 0 !important;
 		box-shadow: none !important;
 	}
+
 	input {
 		background-color: transparent !important;
 		color: #333333 !important;
@@ -41,63 +43,31 @@ st.markdown("""
 		border: none !important;
 		box-shadow: none !important;
 	}
+
 	div[data-baseweb="input"]:focus-within {
 		border: 2px solid #666666 !important;
 	}
 	</style>
 """, unsafe_allow_html=True)
 
-# Title and intro
+# Title and instructions
 st.title("<<domAIn chatbot>>")
 st.markdown("Ask the domAIn Chatbot anything about the book")
 
-# --- Chat History Setup ---
+# --- Session state for chat history ---
 if "messages" not in st.session_state:
 	st.session_state.messages = []
 
-# Show previous messages
+# Show chat history
 for msg in st.session_state.messages:
 	sender = "You" if msg["role"] == "user" else "Chatbot"
 	st.markdown(f"**{sender}:** {msg['content']}")
 
-# Input field
+# User input
 user_input = st.text_input("You:", placeholder="Ask a question...")
 
 # Send button
 if st.button("Send"):
 	if user_input.strip():
-		# Save user message
-		st.session_state.messages.append({"role": "user", "content": user_input})
-
-		with st.spinner("Thinking..."):
-			# Prepare request
-			payload = {
-				"output_type": "chat",
-				"input_type": "chat",
-				"input_value": user_input
-			}
-			headers = {
-				"Content-Type": "application/json",
-				"x-api-key": api_key
-			}
-
-			try:
-				response = requests.post(url, json=payload, headers=headers)
-				response.raise_for_status()
-				data = response.json()
-				bot_reply = data["outputs"][0]["outputs"][0]["results"]["message"]["text"]
-
-				# Save bot response
-				st.session_state.messages.append({"role": "bot", "content": bot_reply})
-
-				# Rerun so the new messages show immediately
-				st.experimental_rerun()
-
-			except Exception as e:
-				st.session_state.messages.append({"role": "bot", "content": f"Error: {e}"})
-				st.experimental_rerun()
-
-# Optional: Clear history
-if st.button("Clear chat"):
-	st.session_state.messages = []
-	st.experimental_rerun()
+		# Save user input
+		st.session_state.messages.append({"role": "user", "_
